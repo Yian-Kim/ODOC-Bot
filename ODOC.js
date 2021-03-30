@@ -1,30 +1,37 @@
+/**
+ * ODOC Bot
+ * - Github commit check chat bot used in ODOC (One Day One Commit)
+ * 
+ * @author Chanmi Kim
+ */
 const scriptName = "ODOC.js";
+const Jsoup = org.jsoup.Jsoup;
 
 /**
- * (string) room
- * (string) sender
- * (boolean) isGroupChat
- * (void) replier.reply(message)
- * (boolean) replier.reply(room, message, hideErrorToast = false) // 전송 성공시 true, 실패시 false 반환
- * (string) imageDB.getProfileBase64()
- * (string) packageName
+ * Chatbot Message Response
+ * 
+ * @param {string} room 
+ * @param {string} msg 
+ * @param {boolean} sender 
+ * @param {void} isGroupChat 
+ * @param {boolean} replier 
+ * @param {string} imageDB 
+ * @param {string} packageName 
  */
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
 
+    let githubId = "Chanmi-Kim";
+    let nickName = "devmei";
+    let searchDate = "2021-03-30";
+    
+    if (msg === "/check") {
+        const doc = Jsoup.connect("https://github.com/" + githubId).get();
+
+        let allContribution = doc.select(".js-calendar-graph-svg g g rect");
+        let commitCount = allContribution.select("[data-date='" + searchDate + "']").attr("data-count");
+        
+        let result = nickName + " : " + commitCount + " commit";
+        
+        replier.reply(result);
+    }
 }
-
-//아래 4개의 메소드는 액티비티 화면을 수정할때 사용됩니다.
-function onCreate(savedInstanceState, activity) {
-  var textView = new android.widget.TextView(activity);
-  textView.setText("Hello, World!");
-  textView.setTextColor(android.graphics.Color.DKGRAY);
-  activity.setContentView(textView);
-}
-
-function onStart(activity) {}
-
-function onResume(activity) {}
-
-function onPause(activity) {}
-
-function onStop(activity) {}
